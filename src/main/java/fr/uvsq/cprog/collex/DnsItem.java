@@ -20,4 +20,9 @@ public class DnsItem {
     public NomMachine getNomMac(){
         return nomMac;
     }
+
+    @Override
+    public String toString(){
+        return adrIP.toString()+" "+nomMac.toString();
+    }
 }

@@ -70,19 +70,27 @@ public class Dns {
         return listeIPDomaine;
     }
 
-    public void addItem(AdresseIP adrIP, NomMachine nomMac) throws IOException {
-        //Ajouter une ligne dans le fichier de base de données dédié au serveur DNS
-        int i = 0;
-        while(i<bddContenu.size()){
-            if(bddContenu.get(i).contains(nomMac.toString()+" ")){
-                break;
+    public String addItem(AdresseIP adrIP, NomMachine nomMac) {
+        try {
+            for (String line : bddContenu) {
+                if (line.contains(adrIP.toString())) {
+                    return "ERREUR : L'adresse IP existe déjà !";
+                }
+                else if (line.contains(nomMac.toString())) {
+                    return "ERREUR : Le nom de machine existe déjà !";
+                }
             }
-            i++;
-        }
-        if(i==bddContenu.size()){
-            List<String> dnsItem = new ArrayList<String>();
-            dnsItem.add(nomMac.toString()+" "+adrIP.toString());
+
+            List<String> dnsItem = new ArrayList<>();
+            dnsItem.add(adrIP.toString() + " " + nomMac.toString()); // IP first, machine second
             Files.write(Path.of(this.nomFichier), dnsItem, StandardOpenOption.APPEND);
+
+            return "Ajout réussi.";
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "ERREUR : Impossible d'écrire dans le fichier : " + e.getMessage();
         }
     }
+
 }

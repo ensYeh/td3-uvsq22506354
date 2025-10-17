@@ -8,7 +8,7 @@ public class DnsTUI {
 
     }
 
-    public Commande nextCommande(String texteUtilisateur){
+    public static Commande nextCommande(String texteUtilisateur){
         String hostnameRegex = "^(?!\\d+\\.\\d+\\.\\d+\\.\\d+$)([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$";
         String ipv4Regex = "^((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)$";
         String domainRegex = "^ls(\\s+-a)?\\s+[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+$";

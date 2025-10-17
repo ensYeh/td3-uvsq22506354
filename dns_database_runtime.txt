@@ -1,0 +1,2 @@
+193.51.25.90 www.uvsq.fr
+193.51.31.154 poste.uvsq.fr

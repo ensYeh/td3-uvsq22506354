@@ -9,98 +9,40 @@ import java.util.List;
 import java.util.Properties;
 
 public class Dns {
-    private String nomFichier;
-    private List<String> bddContenu;
+    String nomFichier;
+    List<String> bddContenu;
 
-    /*public Dns(){
-        //Charger la base de données depuis le fichier "BDD du DNS"
-        Properties props = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.err.println("Impossible de trouver config.properties");
-            } else {
-                props.load(input);
-                this.nomFichier = props.getProperty("dns.database.filename");
-                System.out.println("Le fichier de base de données du DNS chargé : " + nomFichier);
-                this.bddContenu = Files.readAllLines(Path.of(this.nomFichier));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Properties props = new Properties();
-        try (FileInputStream fis = new FileInputStream("config.properties")) {
-            props.load(fis);
-            this.nomFichier = props.getProperty("dns.database.filename");
-            System.out.println("Le fichier de base de données du DNS chargé : " + nomFichier);
-            this.bddContenu = Files.readAllLines(Path.of(this.nomFichier));
-        } catch (IOException e) {
-            System.err.println("Erreur lors du chargement du fichier de propriétés : " + e.getMessage());
-        }
-    }
     public Dns() {
         Properties props = new Properties();
 
+        // Ouverture du fichier de configuration "config.properties"
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
             if (input == null) {
                 System.err.println("Impossible de trouver config.properties");
                 return;
             }
-
-            props.load(input);
-            this.nomFichier = props.getProperty("dns.database.filename");
-            System.out.println("Le fichier de base de données du DNS chargé : " + nomFichier);
-            try (InputStream dnsStream = getClass().getClassLoader().getResourceAsStream(this.nomFichier)) {
-                if (dnsStream == null) {
-                    System.err.println("Impossible de trouver " + this.nomFichier + " dans le classpath !");
-                    return;
-                }
-                this.bddContenu = new BufferedReader(new InputStreamReader(dnsStream))
-                        .lines()
-                        .toList();
-
-                System.out.println("Base de données DNS chargée avec succès (" + bddContenu.size() + " lignes).");
-            }
-
-        } catch (IOException e) {
-            System.err.println("Erreur lors du chargement de la configuration ou du fichier DNS :");
-            e.printStackTrace();
-        }
-    }*/
-
-    public Dns() {
-        Properties props = new Properties();
-
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.err.println("Impossible de trouver config.properties");
-                return;
-            }
-
+            // Chargement de la propriété dns.database.filename qui contient le path du fichier de base de données du DNS
             props.load(input);
             String resourceFile = props.getProperty("dns.database.filename");
-            System.out.println("Le fichier de base de données du DNS chargé : " + resourceFile);
 
             Path runtimeFile = Path.of("dns_database_runtime.txt");
             this.nomFichier = runtimeFile.toString();
 
-            // Copier depuis resources si besoin
             if (!Files.exists(runtimeFile)) {
                 try (InputStream dnsStream = getClass().getClassLoader().getResourceAsStream(resourceFile)) {
                     if (dnsStream != null) {
                         Files.copy(dnsStream, runtimeFile);
                         System.out.println("Copie initiale du fichier vers dns_database_runtime.txt");
                     } else {
-                        // créer un fichier vide si la ressource n’existe pas
+                        // Créer un fichier vide si la ressource n’existe pas
                         Files.createFile(runtimeFile);
                         System.out.println("Création d’un nouveau fichier dns_database_runtime.txt vide");
                     }
                 }
             }
 
-            // Charger le contenu du fichier modifiable
+            // Lire le contenu du fichier modifiable
             this.bddContenu = Files.readAllLines(runtimeFile);
-            System.out.println("Base de données DNS chargée avec succès (" + bddContenu.size() + " lignes).");
-
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement du fichier DNS :");
             e.printStackTrace();
@@ -166,7 +108,7 @@ public class Dns {
             // Création de la nouvelle ligne
             String entry = adrIP.toString() + " " + nomMac.toString();
 
-            // ⚠️ S’assurer que le fichier existe avant d’écrire
+            // S’assurer que le fichier existe avant d’écrire
             Path filePath = Path.of(this.nomFichier);
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);

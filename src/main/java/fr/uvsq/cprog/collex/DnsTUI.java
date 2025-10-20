@@ -21,17 +21,13 @@ public class DnsTUI {
             return new QuitterApp();
         }
         else if (ipPattern.matcher(texteUtilisateur).matches()) {
-            System.out.println(texteUtilisateur + " → IPv4 address");
             return new RechercherNom(texteUtilisateur);
         } else if (hostPattern.matcher(texteUtilisateur).matches()) {
-            System.out.println(texteUtilisateur + " → Valid hostname");
             return new RechercherIP(texteUtilisateur);
         } else if(domaineRegex.matcher(texteUtilisateur).matches()) {
-            System.out.println(texteUtilisateur + " → ls [-a] domain");
             return new RechercherMachinesDomaine(texteUtilisateur);
         }
         else if(regexAjout.matcher(texteUtilisateur).matches()) {
-            System.out.println(texteUtilisateur + " → add adr.es.se.ip nom.qualifié.machine");
             return new AjouterItemBD(texteUtilisateur);
         }
         else {
